@@ -29,7 +29,7 @@ const getYear_Month_Week = (str) => {
   const firstDayOfMonth = moment(str).startOf("month");
   const firstDayOfWeek = moment(str).startOf("isoweek");
   const lastDayOfWeek = moment(str).endOf("isoweek");
-  let year = now.get("year");
+  let year = firstDayOfWeek.get("year");
   let month = 0;
   let week = 0;
   // 달이 바뀔 때
@@ -47,8 +47,6 @@ const getYear_Month_Week = (str) => {
       week = 1;
     } else {
       month = firstDayOfWeek.get("month") + 1;
-      // week =
-      //   now.get("isoweek") - firstDayOfWeek.startOf("month").get("isoweek");
       week =
         getYear_Month_Week(now.add(-7, "days").format("YYYY-MM-DD")).week + 1;
     }
@@ -58,7 +56,7 @@ const getYear_Month_Week = (str) => {
     week = now.get("isoweek") - firstDayOfMonth.get("isoweek");
     // 1월 초가 (ISO 표준) 12월 5주차일때
     if (week < 0) {
-      year = firstDayOfWeek.get("year");
+      // year = firstDayOfWeek.get("year");
       week = now.get("isoweek");
     }
 
