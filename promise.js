@@ -1,15 +1,52 @@
-function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
+let request = require("request");
+
+// API url
+let url = "http://info.cern.ch/";
+
+// function main() {
+//   let res = request(url, function (error, response) {
+//     if (!error && response.statusCode == 200) {
+//       //console.log(response.body);
+//     }
+//   });
+//   console.log(res.body);
+// }
+
+// main();
+
+function doRequest(url) {
+  return new Promise(function (resolve, reject) {
+    request(url, function (error, response) {
+      if (!error && response.statusCode == 200) {
+        resolve(response);
+      } else {
+        reject(error);
+      }
+    });
+  });
 }
-//2초동안 기다리게 하고 사과를 리턴하는 메서드
-async function getApple() {
-  await delay(2000);
-  return "🍎";
+async function main() {
+  doRequest(url).then(function (res) {
+    console.log(res.body);
+  });
 }
-//1초동안 기다라게 하고 사과를 리턴하는 메서드
-async function getBanana() {
-  await delay(1000);
-  return "🍌";
-}
-getApple().then(console.log);
-getBanana().then(console.log);
+
+main();
+
+// function doRequest(url) {
+//   return new Promise(function (resolve, reject) {
+//     request(url, function (error, response) {
+//       if (!error && response.statusCode == 200) {
+//         resolve(response);
+//       } else {
+//         reject(error);
+//       }
+//     });
+//   });
+// }
+// async function main() {
+//   let res = await doRequest(url);
+//   console.log(res.body);
+// }
+
+// main();
