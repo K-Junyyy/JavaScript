@@ -47,7 +47,10 @@ const getYear_Month_Week = (str) => {
       week = 1;
     } else {
       month = firstDayOfWeek.get("month") + 1;
-      week = 5;
+      // week =
+      //   now.get("isoweek") - firstDayOfWeek.startOf("month").get("isoweek");
+      week =
+        getYear_Month_Week(now.add(-7, "days").format("YYYY-MM-DD")).week + 1;
     }
   }
   // 달이 안바뀔 때
@@ -84,6 +87,6 @@ const cal = (m) => {
 };
 
 for (let i = 0; i < 2500; i++) {
-  const startDate = moment("2015-12-04");
+  const startDate = moment("2021-06-15");
   cal(startDate.add(i, "days"));
 }
