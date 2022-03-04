@@ -1,6 +1,6 @@
 const moment = require("moment");
 
-/* YYYY-MM-DD 가 주어지면 M월 W주차를 구하는 예제코드 */
+/* YYYY-MM-DD 가 주어지면 Y년도 M월 W주차를 구하는 예제코드 */
 
 const dayOfWeek = (num) => {
   switch (num) {
@@ -23,12 +23,13 @@ const dayOfWeek = (num) => {
   }
 };
 
-const getWeekAndMonth = (str) => {
+const getYear_Month_Week = (str) => {
   // str 형식은 YYYY-MM-DD
   const now = moment(str);
   const firstDayOfMonth = moment(str).startOf("month");
   const firstDayOfWeek = moment(str).startOf("isoweek");
   const lastDayOfWeek = moment(str).endOf("isoweek");
+  let year = now.get("year");
   let month = 0;
   let week = 0;
   // 달이 바뀔 때
@@ -42,35 +43,41 @@ const getWeekAndMonth = (str) => {
       1 <= firstDayOfNextMonth.get("day") &&
       firstDayOfNextMonth.get("day") <= 4
     ) {
-      month = lastDayOfWeek.get("month");
+      month = lastDayOfWeek.get("month") + 1;
       week = 1;
     } else {
-      month = firstDayOfWeek.get("month");
+      month = firstDayOfWeek.get("month") + 1;
       week = 5;
     }
   }
   // 달이 안바뀔 때
   else {
     week = now.get("isoweek") - firstDayOfMonth.get("isoweek");
-    // 12월에서 1월로 넘어갈 때
-    if (week < 0) week = now.get("isoweek");
+    // 1월 초가 (ISO 표준) 12월 5주차일때
+    if (week < 0) {
+      year = firstDayOfWeek.get("year");
+      week = now.get("isoweek");
+    }
+
     // 해당 달의 1일이 월~목 사이일 때
     if (1 <= firstDayOfMonth.get("day") && firstDayOfMonth.get("day") <= 4)
       week++;
-    month = now.get("month");
+    month = now.get("month") + 1;
   }
-  return { month: month, week: week };
+  return { year: year, month: month, week: week };
 };
 
 const cal = (m) => {
-  const weekAndMonth = getWeekAndMonth(m.format("YYYY-MM-DD"));
-  const month = weekAndMonth.month + 1;
-  const week = weekAndMonth.week;
+  const Year_Month_Week = getYear_Month_Week(m.format("YYYY-MM-DD"));
+  const year = Year_Month_Week.year;
+  const month = Year_Month_Week.month;
+  const week = Year_Month_Week.week;
 
   console.log(
     m.format("YYYY-MM-DD"),
     dayOfWeek(m.get("day")),
     "/",
+    year + "년도",
     month + "월",
     week + "주차"
   );
